@@ -11,18 +11,19 @@ class Character {
   late List<int> appearance;
   late String portrayed;
   late String category;
-  late List better_call_saul_appearance;
+  late List<int> better_call_saul_appearance;
 
   Character.fromJson(Map<String, dynamic> json) {
     id = json["char_id"];
     name = json['name'];
-    occupation = json['occupation'];
+    occupation = List<String>.from(json['occupation']);
     img = json['img'];
     status = json['status'];
     nickName = json['nickname'];
-    appearance = json['appearance'];
+    appearance = List<int>.from(json['appearance']);
     portrayed = json['portrayed'];
     category = json['category'];
-    better_call_saul_appearance = json["better_call_saul_appearance"];
+    better_call_saul_appearance =
+        List<int>.from(json["better_call_saul_appearance"]);
   }
 }
