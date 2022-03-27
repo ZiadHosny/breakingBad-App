@@ -5,6 +5,7 @@ import 'package:breaking_bad/models/characters.dart';
 import 'package:breaking_bad/widgets/character_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 
 class CharactersScreen extends StatefulWidget {
   @override
@@ -46,8 +47,8 @@ class _CharactersScreenState extends State<CharactersScreen> {
   Widget showLoadingIndicator() {
     return Center(
       child: CircularProgressIndicator(
-        backgroundColor: Theme.of(context).primaryColor,
-        color: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).primaryColorDark,
+        color: Theme.of(context).primaryColorLight,
       ),
     );
   }
@@ -147,6 +148,30 @@ class _CharactersScreenState extends State<CharactersScreen> {
     setState(() {});
   }
 
+  Widget buildNoInternetWidget() {
+    return Center(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Can\'t connect .. check internet',
+              style: TextStyle(
+                fontSize: 22,
+                color: Theme.of(context).primaryColor,
+              ),
+            ),
+            Image.asset('assets/images/not_found.png')
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +183,17 @@ class _CharactersScreenState extends State<CharactersScreen> {
         actions: buildAppBarActions(),
       ),
       backgroundColor: Theme.of(context).primaryColor,
-      body: buildBlocWidget(),
+      body: OfflineBuilder(
+        connectivityBuilder: (context, value, child) {
+          final bool connected = (value != ConnectionState.none);
+          if (connected) {
+            return buildBlocWidget();
+          } else {
+            return buildNoInternetWidget();
+          }
+        },
+        child: showLoadingIndicator(),
+      ),
     );
   }
 }

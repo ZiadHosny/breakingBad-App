@@ -1,4 +1,4 @@
-import 'package:breaking_bad/models/characters.dart';
+import '../models/characters.dart';
 
 import 'package:flutter/material.dart';
 
@@ -25,15 +25,13 @@ class CharacterItem extends StatelessWidget {
             tag: character.id,
             child: Container(
               color: Theme.of(context).primaryColorDark,
-              child: character.img.isNotEmpty
-                  ? FadeInImage.assetNetwork(
-                      width: double.infinity,
-                      height: double.infinity,
-                      placeholder: 'assets/images/loading-loop.gif',
-                      image: character.img,
-                      fit: BoxFit.cover,
-                    )
-                  : Image.asset('assets/images/loading-loop.gif'),
+              child: FadeInImage.assetNetwork(
+                width: double.infinity,
+                height: double.infinity,
+                placeholder: 'assets/images/loading-loop.gif',
+                image: character.img,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           footer: Container(

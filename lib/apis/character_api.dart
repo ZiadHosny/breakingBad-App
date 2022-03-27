@@ -18,4 +18,16 @@ class CharactersApi {
       return [];
     }
   }
+
+  Future<List<dynamic>> getAllQuotes(String name) async {
+    try {
+      var response = await dio.get('quote', queryParameters: {
+        'author': name,
+      });
+
+      return response.data;
+    } catch (e) {
+      return [];
+    }
+  }
 }

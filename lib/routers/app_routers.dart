@@ -1,9 +1,9 @@
-import 'package:breaking_bad/apis/character_api.dart';
-import 'package:breaking_bad/cubit/characters_cubit.dart';
-import 'package:breaking_bad/models/characters.dart';
-import 'package:breaking_bad/repository/characte_repository.dart';
-import 'package:breaking_bad/screens/character_deatails_screen.dart';
-import 'package:breaking_bad/screens/character_screen.dart';
+import '../apis/character_api.dart';
+import '../cubit/characters_cubit.dart';
+import '../models/characters.dart';
+import '../repository/characte_repository.dart';
+import '../screens/character_deatails_screen.dart';
+import '../screens/character_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +30,8 @@ class AppRouter {
         final character = settings.arguments as Character;
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
-            create: (BuildContext contxt) => charactersCubit,
+            create: (BuildContext contxt) =>
+                CharactersCubit(characterRepository),
             child: CharacterDetailsScreen(character: character),
           ),
         );

@@ -9,3 +9,10 @@ class CharactersLoaded extends CharactersState {
   final List<Character> characters;
   CharactersLoaded(this.characters);
 }
+
+class QuotesLoaded extends CharactersState {
+  final List<String> quotes;
+
+  QuotesLoaded(this.quotes);
+
+}

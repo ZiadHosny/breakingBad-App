@@ -1,13 +1,80 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:breaking_bad/cubit/characters_cubit.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:breaking_bad/models/characters.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CharacterDetailsScreen extends StatelessWidget {
   final Character character;
-  const CharacterDetailsScreen({
+
+  CharacterDetailsScreen({
     Key? key,
     required this.character,
   }) : super(key: key);
+
+  List<String> quotes = [];
+
+  Widget buildLoadedQuote(List<String> quotes, context) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Center(
+        child: DefaultTextStyle(
+          style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).primaryColorLight,
+              shadows: [
+                Shadow(
+                  blurRadius: 7,
+                  color: Theme.of(context).primaryColor,
+                )
+              ]),
+          child: AnimatedTextKit(
+            repeatForever: true,
+            animatedTexts: quotes
+                .map(
+                  (e) => FlickerAnimatedText(e,
+                      textAlign: TextAlign.center,
+                      speed: const Duration(
+                        seconds: 3,
+                      )),
+                )
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBlocWidget(ctx) {
+    return BlocBuilder<CharactersCubit, CharactersState>(
+      builder: (context, state) {
+        if (state is QuotesLoaded) {
+          quotes = (state).quotes;
+          quotes.shuffle();
+          if (quotes.isEmpty) {
+            return const SizedBox();
+          }
+          return buildLoadedQuote(quotes, ctx);
+        } else {
+          return showLoadingIndicator(ctx);
+        }
+      },
+    );
+  }
+
+  Widget showLoadingIndicator(context) {
+    return Center(
+      child: CircularProgressIndicator(
+        backgroundColor: Theme.of(context).primaryColorDark,
+        color: Theme.of(context).primaryColorLight,
+      ),
+    );
+  }
 
   Widget buildSliverAppBar(context) {
     return SliverAppBar(
@@ -15,6 +82,7 @@ class CharacterDetailsScreen extends StatelessWidget {
       pinned: true,
       stretch: true,
       floating: false,
+      snap: false,
       backgroundColor: Theme.of(context).primaryColorDark,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
@@ -69,6 +137,8 @@ class CharacterDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<CharactersCubit>(context)
+        .getAllQuotesByCharacter(character.name);
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       body: CustomScrollView(
@@ -85,6 +155,7 @@ class CharacterDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 30),
                       characterInfo(
                           'Job : ', character.occupation.join(' / '), context),
                       buildDivider(315, context),
@@ -115,7 +186,11 @@ class CharacterDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 400,
+                  height: 100,
+                ),
+                buildBlocWidget(context),
+                const SizedBox(
+                  height: 300,
                 ),
               ],
             ),

@@ -1,8 +1,7 @@
 // ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
-import 'package:flutter/material.dart';
-
 import 'package:breaking_bad/routers/app_routers.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(

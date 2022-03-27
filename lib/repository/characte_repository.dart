@@ -1,5 +1,6 @@
-import 'package:breaking_bad/apis/character_api.dart';
-import 'package:breaking_bad/models/characters.dart';
+import '../apis/character_api.dart';
+import '../models/characters.dart';
+import '../models/quote.dart';
 
 class CharacterRepository {
   final CharactersApi charApi;
@@ -12,5 +13,11 @@ class CharacterRepository {
     return characters
         .map((character) => Character.fromJson(character))
         .toList();
+  }
+
+  Future<List<Quote>> getAllQuotesByCharacter(String name) async {
+    final quotes = await charApi.getAllQuotes(name);
+
+    return quotes.map((quote) => Quote.fromJson(quote)).toList();
   }
 }
